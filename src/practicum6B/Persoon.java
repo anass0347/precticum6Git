@@ -1,77 +1,77 @@
 package practicum6B;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Persoon {
     private String naam;
-    private double budget;
-    private ArrayList<Game> gameLijst;
-
-
+    private Double budget;
+    private ArrayList<Game> games;
+    private Game gameObj;
 
     public Persoon(String nm, double bud){
-        gameLijst = new ArrayList<Game>();
         naam = nm;
-        budget = bud;
+        budget = Double.valueOf(bud);
+        games = new ArrayList<Game>();
     }
 
-    public double getBudget(){
-        return budget;
+    public String getNaam() { return naam; }
+    public Double getBudget() { return budget; }
+    public ArrayList<Game> getGames() { return games; }
+    public Game getGameObj() { return gameObj; }
 
-    }
+    public void setBudget(Double budget) { this.budget = budget; }
+    public void setNaam(String naam) { this.naam = naam; }
+    public void setGameObj(Game gameObj) { this.gameObj = gameObj; }
+    public void setGames(ArrayList<Game> games) { this.games = games; }
 
-    public boolean koop(Game g){
-        if (gameLijst.contains(g)) {
+    public boolean koop(Game game){
+        Double huidigeWaarde = game.huidigeWaarde();
+        if (budget >= huidigeWaarde && !games.contains(game)){
+            budget = budget - huidigeWaarde;
+            games.add(game);
+            return true;
+        }
+        else{
             return false;
         }
-
-        if (budget <= g.huidigeWaarde()) {
-            return false;
-        }
-
-        budget = getBudget() - g.huidigeWaarde();
-        this.gameLijst.add(g);
-        return true;
     }
 
     public boolean verkoop(Game g, Persoon koper){
-        if(koper.budget >= g.huidigeWaarde() && !koper.gameLijst.contains(g) && gameLijst.contains(g)){
-            koper.gameLijst.add(g);
-
-            gameLijst.remove(g);
-
-            koper.budget = koper.getBudget() - g.huidigeWaarde();
-            budget = getBudget() + g.huidigeWaarde();
-            return true;
-
-        }else{
-            koper.gameLijst.remove(g);
-            return false;
-        }
-
-    }
-
-    public Game zoekGameOpNaam(String g){
-        for(Game game : gameLijst){
-            if(game.getNaam().equals(g)){
-                return game;
+        Double huidigeWaarde = g.huidigeWaarde();
+        if(!koper.games.contains(g)) {
+            if(games.contains(g)){
+                if (koper.budget >= huidigeWaarde) {
+                    koper.budget = koper.budget - huidigeWaarde ;
+                    budget = budget + huidigeWaarde;
+                    koper.games.add(g);
+                    games.remove(g);
+                    return true;
+                }
             }
         }
-        return null;
+        return false;
+    }
+    public int hashCode() {
+        return Objects.hash(naam, budget, gameObj, games);
+    }
 
-
+    public String toString(){
+        String out = naam + " heeft een budget van €" +  String.format("%.2f", budget) + " en bezit de volgende games:";
+        for (Game g: games){
+            out += "\n"+ g;
+        }
+        return out;
     }
 
 
 
-    public String toString(){
-        String res = naam + " heeft een budget van €" + String.format("%.2f", getBudget()) + " en bezit de volgende games:";
-        for(int i = 0; i< gameLijst.size(); i++){
-            res += "\n";
-            res += gameLijst.get(i);
-
-
+    public ArrayList<Game> bepaalGamesNietInBezit(ArrayList<Game> teKoop) {
+        for (Game tekoop : teKoop) {
+            if (games.contains(tekoop)) {
+                teKoop.remove(tekoop);
+            }
         }
-        return res;
+        return teKoop;
     }
 }
