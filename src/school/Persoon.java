@@ -74,5 +74,4 @@ public class Persoon {
         }
         return teKoop;
     }
-    //test
 }
