@@ -1,5 +1,5 @@
 package practicum6B;
-//tttttttttttttt
+//ttt
 import java.time.LocalDate;
 
 public class Main {
