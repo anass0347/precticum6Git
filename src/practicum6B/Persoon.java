@@ -63,8 +63,14 @@ public class Persoon {
         }
         return out;
     }
-
-
+    public Game zoekGameOpNaam(String game) {
+        for(Game gevonden: games) {
+            if (gevonden.getNaam().equals(game)) {
+                return gevonden;
+            }
+        }
+        return null;
+    }
 
     public ArrayList<Game> bepaalGamesNietInBezit(ArrayList<Game> teKoop) {
         for (Game tekoop : teKoop) {
